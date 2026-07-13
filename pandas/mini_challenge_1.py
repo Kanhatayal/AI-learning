@@ -128,7 +128,7 @@ print(df["attrition"].value_counts())
 print(df["attrition"].value_counts(normalize=True) * 100)
 
 # groupby returns pandas object
-# It returns a DataFrameGroupBy object.
+# groupby returns a DataFrameGroupBy object.
 # think of it like that we have done grouping now we will get the number
 
 # number of employees who had left the company and the percentage left
@@ -146,3 +146,44 @@ attrition_rate = ((left_employees/total_employees)*100).sort_values(ascending=Fa
 print(attrition_rate)
 print(df.columns)
 print(df[["monthly_income", "over_time"]])
+
+# In sales department how many left due to overtime ? 
+sales_df = df[df["department"] == "sales"]
+total_sales = sales_df.groupby("over_time").size()
+left_sales = (
+    sales_df[sales_df["attrition"] == "yes"]
+    .groupby("over_time")
+    .size()
+)
+
+sales_attrition_rate = (left_sales / total_sales) * 100
+
+print(sales_attrition_rate)
+# [1470 rows x 2 columns]
+# over_time
+# no     13.836478
+# yes    37.500000
+# dtype: float64
+# conclusion is, sales is getting affected due to overtime. 
+
+# how much attrition rate is  there due to over_time ? 
+over_time_df = df[df["over_time"] == "yes"]
+print(over_time_df["attrition"].head())
+total_over_time_employees = len(over_time_df)
+
+left_over_time = len(
+    over_time_df[
+        over_time_df["attrition"] == "yes"
+    ]
+)
+left_rate = (left_over_time/total_over_time_employees)*100
+print(left_rate)
+# Name: attrition, dtype: str
+# 30.528846153846157
+
+# 4. Does monthly income affect attrition?
+# features to use, so that i can answer the question 
+# monthly_income 
+# stock_option_level
+
+print(df["monthly_income"].describe())
